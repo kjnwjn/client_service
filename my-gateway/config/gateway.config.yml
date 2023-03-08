@@ -1,0 +1,55 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+
+  services1:
+    host: localhost
+    paths:
+      - '/services1/*'
+  api:
+    host: localhost
+    paths:
+      - '/api/*'
+serviceEndpoints:
+  services1:
+    url: 'http://localhost:3300/'
+  api:
+    url: 'http://localhost:3000'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  services1:
+    apiEndpoints:
+      - services1
+    policies:
+      # - rate-limit:
+      # - action:
+      #     max: 10
+      #     windowMs: 12000
+      - proxy:
+          - action:
+              serviceEndpoint: services1
+              changeOrigin: true
+
+  api:
+    apiEndpoints:
+      - api
+    policies:
+      # - rate-limit:
+      #   - action:
+      #       max: 10
+      #       windowMs: 12000
+      - proxy:
+          - action:
+              serviceEndpoint: api
+              # changeOrigin: true

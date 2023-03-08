@@ -1,4 +1,22 @@
 {
+  "name": "stdportal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kjnwjn/stdportal-micro-services.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kjnwjn/stdportal-micro-services/issues"
+  },
+  "homepage": "https://github.com/kjnwjn/stdportal-micro-services#readme",
   "devDependencies": {
     "pm2": "^3.5.2"
   }
