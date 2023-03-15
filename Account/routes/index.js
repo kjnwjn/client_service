@@ -1,9 +1,7 @@
-var express = require('express');
-var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-module.exports = router;
+const apiRoute = require("./api");
+const swaggerFile = require("../utils/swagger_output.json");
+const swaggerUi = require("swagger-ui-express");
+module.exports = function route(app) {
+    app.use("/api/account-service/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+    app.use("/api/v1", apiRoute);
+};

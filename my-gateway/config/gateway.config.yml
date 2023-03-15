@@ -1,23 +1,23 @@
 http:
-  port: 8080
+  port: 8888
 admin:
   port: 9876
   host: localhost
+  
 apiEndpoints:
-
-  services1:
+  account-server:
     host: localhost
     paths:
-      - '/services1/*'
-  api:
+      - '/api/account-service/*'
+  subject-server:
     host: localhost
     paths:
-      - '/api/*'
+      - '/api/docs/*'
 serviceEndpoints:
-  services1:
-    url: 'http://localhost:3300/'
-  api:
-    url: 'http://localhost:3000'
+  account-server:
+    url: 'http://localhost:3939/'
+  subject-server:
+    url: 'http://localhost:3300'
 policies:
   - basic-auth
   - cors
@@ -27,23 +27,30 @@ policies:
   - oauth2
   - proxy
   - rate-limit
+  - jwt
 pipelines:
-  services1:
+  account-server:
     apiEndpoints:
-      - services1
+      - account-server
     policies:
-      # - rate-limit:
-      # - action:
-      #     max: 10
-      #     windowMs: 12000
+      - jwt: # secure API with key auth
+        - action:
+            secretOrPublicKey: "123123"
+            checkCredentialExistence: true
+            issuers:
+              - myIssuer
+            audiences:
+              - myAudience
+            algorithms:
+              - HS256
       - proxy:
           - action:
-              serviceEndpoint: services1
+              serviceEndpoint: account-server
               changeOrigin: true
 
-  api:
+  subject-server:
     apiEndpoints:
-      - api
+      - subject-server
     policies:
       # - rate-limit:
       #   - action:
@@ -51,5 +58,5 @@ pipelines:
       #       windowMs: 12000
       - proxy:
           - action:
-              serviceEndpoint: api
+              serviceEndpoint: subject-server
               # changeOrigin: true
