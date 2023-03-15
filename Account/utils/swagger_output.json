@@ -11,6 +11,59 @@
     "http"
   ],
   "paths": {
+    "/student/create-new": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Some description...",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fullName": {
+                  "type": "string",
+                  "example": "pham nguyen hoang quan"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "quanpham@gmail.com"
+                },
+                "gender": {
+                  "type": "number",
+                  "example": 0
+                },
+                "id_class": {
+                  "type": "string",
+                  "example": "2123213"
+                },
+                "id_faculty": {
+                  "type": "string",
+                  "example": "321321321"
+                },
+                "course_year": {
+                  "type": "string",
+                  "example": "2012"
+                }
+              },
+              "required": [
+                "fullName",
+                "email",
+                "gender",
+                "id_class",
+                "id_faculty",
+                "course_year"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
     "/token/getAccessToken": {
       "get": {
         "description": "",

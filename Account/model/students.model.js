@@ -1,16 +1,14 @@
 const { sequelize } = require("../configs/db");
-const { DataTypes } = require('sequelize');
-
+const { DataTypes } = require("sequelize");
 
 const Student = sequelize.define(
     "students",
     {
-        id :{
+        id: {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true,
-
         },
         // Model attributes are defined here
         id_student: {
@@ -29,7 +27,27 @@ const Student = sequelize.define(
         },
         gender: {
             type: DataTypes.BOOLEAN,
+            allowNull: true,
+        },
+        fullName: {
+            type: DataTypes.STRING,
             allowNull: false,
+            // allowNull defaults to true
+        },
+        address: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            // allowNull defaults to true
+        },
+        phoneNumber: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            // allowNull defaults to true
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            // allowNull defaults to true
         },
         id_class: {
             type: DataTypes.STRING,
@@ -39,17 +57,22 @@ const Student = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-       
-    },{
-            
+        course_year: {
+            type: DataTypes.NUMBER,
+            allowNull: false,
+        },
+        access_token: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        refresh_token: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+    },
+    {
         underscored: true,
-        }
-    
+    }
 );
 
-
-
 exports.studentModel = Student;
-
-
-
