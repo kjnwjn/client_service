@@ -1,23 +1,16 @@
 const { sequelize } = require("../configs/db");
-const { DataTypes } = require('sequelize');
-
+const { DataTypes } = require("sequelize");
 
 const Class = sequelize.define(
     "Classes",
     {
-        id :{
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
-
-        },
         // Model attributes are defined here
         id_class: {
             type: DataTypes.STRING,
             allowNull: false,
+            primaryKey: true,
         },
-        id_falcuty: {
+        id_faculty: {
             type: DataTypes.STRING,
             allowNull: false,
             // allowNull defaults to true
@@ -27,21 +20,14 @@ const Class = sequelize.define(
             allowNull: false,
             // allowNull defaults to true
         },
-        updated_at	: {
+        updated_at: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-        }
-       
-    },{
-            
+        },
+    },
+    {
         underscored: true,
-        }
-    
+    }
 );
 
-
-
 exports.classModel = Class;
-
-
-

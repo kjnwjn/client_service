@@ -4,16 +4,11 @@ const { DataTypes } = require("sequelize");
 const Student = sequelize.define(
     "students",
     {
-        id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true,
-        },
         // Model attributes are defined here
         id_student: {
             type: DataTypes.STRING,
             allowNull: false,
+            primaryKey: true,
         },
         username: {
             type: DataTypes.STRING,

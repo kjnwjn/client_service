@@ -1,6 +1,7 @@
 const { responseJson } = require("../../utils/response");
 const accountSchema = require("../../services/validateSchema/accountSchema");
 const { studentModel } = require("../../model/students.model");
+const { classModel } = require("../../model/classes.model");
 const { generateRandomString } = require("../../utils/index");
 const bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
@@ -29,10 +30,39 @@ module.exports = {
                     msg: { en: error.details[0].message },
                 });
             }
+
             const purePassword = generateRandomString(6);
             const hashPassword = bcrypt.hashSync(purePassword, bcrypt.genSaltSync(10));
-            console.log(req.body);
-            const id_student = `${req.body.course_year}${generateRandomString(4)}`;
+            const classExist = await classModel
+                .findAll({
+                    where: {
+                        id_class: req.body.id_class,
+                    },
+                })
+                .then((data) => data);
+            console.log(classExist);
+            if (classExist.length < 0) {
+                return responseJson({
+                    res,
+                    status: false,
+                    msg: { en: "Class is not exist!", vn: "Lớp không tồn tại!" },
+                });
+            }
+            const id_student = `${req.body.course_year}${generateRandomString(6)}`;
+            const userExist = await studentModel
+                .findAll({
+                    where: {
+                        id_student: id_student,
+                    },
+                })
+                .then((data) => data);
+            if (userExist.length > 0) {
+                return responseJson({
+                    res,
+                    status: false,
+                    msg: { en: "Student already exist!", vn: "Tài khoản đã tồn tại!" },
+                });
+            }
             const payload = {
                 id_student,
                 username: id_student,

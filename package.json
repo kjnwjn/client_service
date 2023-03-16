@@ -19,5 +19,8 @@
   "homepage": "https://github.com/kjnwjn/stdportal-micro-services#readme",
   "devDependencies": {
     "pm2": "^3.5.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
 }
