@@ -1,76 +1,46 @@
-require("dotenv").config();
-// connect db
-var { connect } = require("./configs/db");
-
-// define cors 
-var cors = require("cors");
+const cors = require("cors");
+const createError = require("http-errors");
+const express = require("express");
+const app = express();
+const logger = require("morgan");
+const path = require("path");
+const RouteInitializer = require("./routes/index");
+const cookieParser = require("cookie-parser");
+const jsonResponse = require("./utils/jsonResponse");
+const { connect: databaseInitializer } = require("./configs/db");
 const corsOptions = { origin: "*", optionsSuccessStatus: 200 };
-const { body, validationResult } = require('express-validator');
 
-
-var createError = require("http-errors");
-var express = require('express');
-var app = express();
-var logger = require('morgan');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-const swaggerAutogen = require('swagger-autogen')
+app.use(express.static(path.join(__dirname, "public")));
+
+const swaggerAutogen = require("swagger-autogen");
 const doc = {
-    info: {
-        title: "Account for stdpotal service",
-        description: "Description",
-    },
+    info: { title: "Account for std-portal service", description: "Description" },
     host: `localhost:${process.env.PORT}/api/v1`,
     schemes: ["http"],
 };
 
-
-// require swagger autogen 
 const outputFile = "./utils/swagger_output.json";
 const endpointsFiles = ["./routes/api.js"];
-swaggerAutogen(outputFile, endpointsFiles, doc)
+swaggerAutogen(outputFile, endpointsFiles, doc);
 
-// response function
-var { responseJson } = require("./utils/response");
+databaseInitializer();
+RouteInitializer(app);
 
-
-// connect db
-connect();
-
-// use cors options 
-app.use(cors(corsOptions));
-
-// define route
-var defineRoute = require("./routes/index");
-defineRoute(app)
-
-// catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+    return next(createError(404));
 });
 
-
-// error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get("env") === "development" ? err : {};
-
-    return responseJson({
-        status: false,
-        statusCode: err.status || 500,
-        msg: { en: err.message, vn: err.message },
-        data: {},
-        res,
-    });
+    return jsonResponse({ req, res })
+        .status(err.status || 500)
+        .json({ message: err.message || "Internal Server Error", errors: err });
 });
-
-
 
 module.exports = app;

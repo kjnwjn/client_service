@@ -1,22 +1,20 @@
-const mysql = require("mysql");
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.HOST,
-    dialect:'mysql' /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
-    dialectModule: require('mysql2'),
-}
-);
+const { Sequelize } = require("sequelize");
+const { DB_NAME, DB_USER, DB_PASSWORD, HOST } = process.env;
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+    host: HOST,
+    dialect: "mysql",
+    dialectModule: require("mysql2"),
+});
+
 const connect = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
+    try {
+        await sequelize.authenticate();
+        console.log("✅ Connection has been established successfully!");
+    } catch (error) {
+        console.log("\x1b[31m%s\x1b[0m", "Failed to connect to database!");
+        console.log("🚀 ~ file: db.js:16 ~ connect ~ error:", error);
+    }
 };
-exports.connect =  connect 
-exports.sequelize =  sequelize 
+exports.connect = connect;
+exports.sequelize = sequelize;
