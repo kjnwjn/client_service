@@ -1,94 +1,221 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Account for stdpotal service",
+    "title": "Account for std-portal service",
     "description": "Description",
     "version": "1.0.0"
   },
-  "host": "localhost:3939/api/v1",
+  "host": "localhost:3939",
   "basePath": "/",
   "schemes": [
     "http"
   ],
   "paths": {
-    "/student/create-new": {
-      "post": {
+    "/api/account-service/v1/account/get/{id_student}": {
+      "get": {
         "tags": [
-          "Account"
+          "Student"
         ],
         "description": "",
         "parameters": [
           {
-            "name": "obj",
+            "name": "id_student",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/account/get-all": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/account/new": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
             "in": "body",
-            "description": "Some description...",
             "schema": {
               "type": "object",
               "properties": {
-                "fullName": {
-                  "type": "string",
-                  "example": "pham nguyen hoang quan"
-                },
-                "email": {
-                  "type": "string",
-                  "example": "quanpham@gmail.com"
-                },
-                "gender": {
-                  "type": "number",
-                  "example": 0
-                },
                 "id_class": {
-                  "type": "string",
-                  "example": "2123213"
+                  "example": "any"
                 },
                 "id_faculty": {
-                  "type": "string",
-                  "example": "321321321"
+                  "example": "any"
+                },
+                "fullName": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "gender": {
+                  "example": "any"
                 },
                 "course_year": {
-                  "type": "string",
-                  "example": "2012"
+                  "example": "any"
                 }
-              },
-              "required": [
-                "fullName",
-                "email",
-                "gender",
-                "id_class",
-                "id_faculty",
-                "course_year"
-              ]
+              }
             }
           }
         ],
         "responses": {}
       }
     },
-    "/token/getAccessToken": {
-      "get": {
+    "/api/account-service/v1/account/change-password": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
         "description": "",
         "parameters": [
           {
-            "name": "x-access-token",
-            "in": "header",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_student": {
+                  "example": "any"
+                },
+                "old_password": {
+                  "example": "any"
+                },
+                "new_password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/account/{id_student}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_student",
+            "in": "path",
+            "required": true,
             "type": "string"
           },
           {
-            "name": "token",
-            "in": "query",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_class": {
+                  "example": "any"
+                },
+                "id_faculty": {
+                  "example": "any"
+                },
+                "id_student": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/class/get/{id_class}": {
+      "get": {
+        "tags": [
+          "Class"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_class",
+            "in": "path",
+            "required": true,
             "type": "string"
           }
         ],
         "responses": {}
       }
     },
-    "/token/test": {
+    "/api/account-service/v1/class/new": {
+      "post": {
+        "tags": [
+          "Class"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_faculty": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/class/get-all": {
       "get": {
         "tags": [
-          "Account"
+          "Class"
         ],
         "description": "",
         "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/class/{id_class}": {
+      "patch": {
+        "tags": [
+          "Class"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_class",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_class": {
+                  "example": "any"
+                },
+                "id_faculty": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {}
       }
     }

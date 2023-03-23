@@ -8,11 +8,8 @@ const accountSchema = Joi.object({
     id_faculty: Joi.string().min(3).max(30).required(),
     address: Joi.string().min(3).max(30),
     phoneNumber: Joi.number().min(10).max(10),
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-        .required(),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
     // access_token: [Joi.string(), Joi.number()],
     // refresh_token: [Joi.string(), Joi.number()],
 });
-
 module.exports = accountSchema;

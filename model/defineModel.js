@@ -1,6 +1,26 @@
 const { sequelize } = require("../configs/db");
 const { DataTypes } = require("sequelize");
 
+// // Define Model
+const Faculty = sequelize.define(
+    "faculty",
+    {
+        id_faculty: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
+        faculty_name: { type: DataTypes.STRING, allowNull: false },
+    },
+    {
+        tableName: "faculty",
+        underscored: true,
+    }
+);
+const Class = sequelize.define(
+    "classes",
+    {
+        id_class: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
+        id_faculty: { type: DataTypes.STRING, allowNull: false },
+    },
+    { underscored: true }
+);
 const Student = sequelize.define(
     "students",
     {
@@ -21,13 +41,27 @@ const Student = sequelize.define(
     { underscored: true }
 );
 
+// Define Associations
+Class.hasMany(Student, {
+    foreignKey: "id_class",
+    targetKey: "id_class",
+});
+Student.belongsTo(Class, {
+    foreignKey: "id_class",
+    targetKey: "id_class",
+});
+
+Faculty.hasMany(Class, {
+    foreignKey: "id_faculty",
+    targetKey: "id_faculty",
+});
+Class.belongsTo(Faculty, {
+    foreignKey: "id_faculty",
+    targetKey: "id_faculty",
+});
+
 module.exports = {
-    findById: async function (id, callback) {
-        try {
-            const student = await Student.findByPk(id);
-            callback(null, student);
-        } catch (error) {
-            callback(error, null);
-        }
-    },
+    Faculty,
+    Class,
+    Student,
 };

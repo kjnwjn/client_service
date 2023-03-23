@@ -16,4 +16,13 @@ module.exports = {
         const expired = Date.now() >= exp * 1000;
         return expired;
     },
+    isNull: (items) => {
+        items.forEach((item) => {
+            if (typeof item === "array") {
+                if (item.length < 0) return { msg: `${item} must be provided`, checked: false };
+            }
+            if (!item) return { msg: `${item} must be provided`, checked: false };
+        });
+        return { checked: true };
+    },
 };

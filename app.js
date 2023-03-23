@@ -18,14 +18,28 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 const swaggerAutogen = require("swagger-autogen");
+// const swaggerAutogen = require("swagger-autogen")({ openapi: "3.0.0" });
+// const doc = {
+//     info: { title: "Account for std-portal service", description: "Description" },
+//     servers: [
+//         {
+//             url: `http://localhost:${process.env.PORT}/api/account-service/v1/student`,
+//             description: "Account for std-portal service",
+//         },
+//         {
+//             url: `http://localhost:${process.env.PORT}/api/account-service/v1/class`,
+//             description: "Class for std-portal service",
+//         },
+//     ],
+// };
 const doc = {
     info: { title: "Account for std-portal service", description: "Description" },
-    host: `localhost:${process.env.PORT}/api/v1`,
+    host: "localhost:" + process.env.PORT || 3000,
     schemes: ["http"],
 };
 
 const outputFile = "./utils/swagger_output.json";
-const endpointsFiles = ["./routes/api.js"];
+const endpointsFiles = ["./routes/index"];
 swaggerAutogen(outputFile, endpointsFiles, doc);
 
 databaseInitializer();
