@@ -10,7 +10,7 @@ const receiveQueue = async () => {
         // create queue
 
         await channel.assertQueue(queueName, {
-            durable: false,
+            durable: true,
         });
         await channel.consume(
             queueName,
