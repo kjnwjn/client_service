@@ -8,14 +8,39 @@ const receiver = {
     },
     getClientData: async function () {
         queueUtils
-            .consumeExchange(EXCHANGE_NAME.DIRECT_GET_CLIENT_DATA, EXCHANGE_TYPE.DIRECT, QUEUE.getStudentData, { durable: true }, { noAck: true }, (data) => {
-                console.log("🚀 ~ file: receive.js:11 ~ queueUtils.consumeExchange ~ data:", data);
+            .consumeExchange(EXCHANGE_NAME.DIRECT_GET_CLIENT_DATA, EXCHANGE_TYPE.DIRECT, QUEUE.getStudentData, { durable: true }, { noAck: true }, async (msg) => {
+                console.log("🚀 ~ file: receive.js:11 ~ queueUtils.consumeExchange ~ msg:", msg);
+                if (msg) {
+                    const student = await findById(msg.data.id_student);
+                    if (student) {
+                        receiver.showClientData(student);
+                    } else {
+                        console.log("student not found");
+                    }
+                }
             })
             .catch((error) => {
                 console.log(error);
             });
-        // .then((data) => console.log({ receiver: data }))
-        // .catch((err) => console.log(err));
+    },
+    showClientData: async (student = null) => {
+        queueUtils
+            .publishMessageToExchange(
+                EXCHANGE_NAME.FAN_OUT_SHOW_CLIENT_DATA,
+                EXCHANGE_TYPE.FANOUT,
+                "",
+                { durable: false },
+                { noAck: true },
+                {
+                    data: student,
+                }
+            )
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                next(error);
+            });
     },
 };
 module.exports = receiver;

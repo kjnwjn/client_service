@@ -35,10 +35,22 @@ const Student = sequelize.define(
         id_class: { type: DataTypes.STRING, allowNull: false },
         id_faculty: { type: DataTypes.STRING, allowNull: false },
         course_year: { type: DataTypes.NUMBER, allowNull: false },
-        access_token: { type: DataTypes.STRING, allowNull: true },
-        refresh_token: { type: DataTypes.STRING, allowNull: true },
     },
     { underscored: true }
+);
+
+const User = sequelize.define(
+    "user",
+    {
+        id_user: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
+        full_name: { type: DataTypes.STRING, allowNull: false },
+        address: { type: DataTypes.STRING, allowNull: true },
+        gender: { type: DataTypes.BOOLEAN, allowNull: true },
+        phone_number: { type: DataTypes.STRING, allowNull: true },
+        role: { type: DataTypes.STRING, allowNull: true },
+        id_faculty: { type: DataTypes.STRING, allowNull: false },
+    },
+    { tableName: "user", underscored: true }
 );
 
 // Define Associations
@@ -64,4 +76,5 @@ module.exports = {
     Faculty,
     Class,
     Student,
+    User,
 };

@@ -13,10 +13,13 @@ module.exports = {
         MATCH: "match",
     },
     EXCHANGE_NAME: {
-        TOPIC_MEETING: "topic.meeting",
         DIRECT_GET_CLIENT_DATA: "getClientData",
+        FAN_OUT_CREATE_CLIENT_DATA: "createClientData",
+        FAN_OUT_SHOW_CLIENT_DATA: "showClientData",
     },
     QUEUE: {
         getStudentData: "getStudentData",
+        createStudentData: "createStudentData",
+        showStudentData: "showStudentData",
     },
 };

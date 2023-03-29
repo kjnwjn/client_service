@@ -26,11 +26,9 @@ class queuesUtil {
                     async (consumeMessage) => {
                         if (consumeMessage) {
                             callback(consumeMessage.content ? JSON.parse(consumeMessage.content.toString()) : {});
-                            //     return consumeMessage.content ? JSON.parse(consumeMessage.content.toString()) : {};
                         } else {
                             reject(false);
                         }
-                        // return JSON.parse(consumeMessage.content);
                     },
                     consumeOptions
                 );

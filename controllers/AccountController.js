@@ -9,6 +9,8 @@ const { body } = require("express-validator");
 const accountSchema = require("../services/validateSchema/accountSchema");
 const changePassSchema = require("../services/validateSchema/changePassSchema");
 const updateAccountSchema = require("../services/validateSchema/updateAccountSchema");
+const { EXCHANGE_TYPE, EXCHANGE_NAME, QUEUE: queueName } = require("../configs/variables");
+let queueUtils = require("../services/rabbitMq/queueUtils");
 
 module.exports = {
     studentGetOne: function (req, res, next) {
@@ -48,16 +50,17 @@ module.exports = {
                 .status(error.status || 500)
                 .json({ message: error.details[0].message || "Internal Server Error" });
         }
+
         if (req.body.id_class) {
             const result = await findByIdClass(req.body.id_class);
             if (!result) {
-                return next(result);
+                return jsonResponse({ req, res }).json({ message: `Class ${req.body.id_class} does not exits!` });
             }
         }
         if (req.body.id_faculty) {
-            const result = await findByIdClass(req.body.id_faculty);
+            const result = await findByIdFaculty(req.body.id_faculty);
             if (!result) {
-                return next(result);
+                return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} does not exits!` });
             }
         }
 
@@ -81,6 +84,24 @@ module.exports = {
             const { dataValues, ...rest } = payload ? payload : {};
             dataValues.password = purePassword;
             if (error) return next(error);
+            queueUtils
+                .publishMessageToExchange(
+                    EXCHANGE_NAME.FAN_OUT_CREATE_CLIENT_DATA,
+                    EXCHANGE_TYPE.FANOUT,
+                    "",
+                    { durable: false },
+                    { noAck: true },
+                    {
+                        data: bodyData,
+                    }
+                )
+                .then((data) => {
+                    console.log(data);
+                })
+                .catch((error) => {
+                    next(error);
+                });
+
             return jsonResponse({ req, res }).json({ status: true, message: `Student ${id_student} has been created successfully!`, data: dataValues });
         });
     },
@@ -119,23 +140,27 @@ module.exports = {
         });
     },
     updateStudentData: async (req, res, next) => {
+        /*
+            #swagger.tags = ['Student']
+        */
         const { error } = updateAccountSchema.validate(req.body);
         if (error) {
             return jsonResponse({ req, res })
                 .status(error.status || 500)
                 .json({ message: error.details[0].message || "Internal Server Error" });
         }
-
         if (req.body.id_class) {
-            const result = await findByIdClass(req.body.id_class);
+            const result = await findByIdFaculty(req.body.id_class);
             if (!result) {
-                return next(result);
+                return jsonResponse({ req, res }).json({ message: `Class ${req.body.id_class} does not exits!` });
             }
         }
+
         if (req.body.id_faculty) {
-            findByIdFaculty(req.body.id_faculty, (error, result) => {
-                if (error) return next(error);
-            });
+            const result = await findByIdFaculty(req.body.id_faculty);
+            if (!result) {
+                return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} does not exits!` });
+            }
         }
         let id_student = req.body.id_student;
         let dataPending = req.body;
