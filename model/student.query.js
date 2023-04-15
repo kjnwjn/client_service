@@ -17,15 +17,13 @@ module.exports = {
             return callback(error, null);
         }
     },
-    createNew: async function ({ id_student = null, username = null, password = null, gender = 1, fullName = null, address = "", phoneNumber = null, email = "", id_class = null, id_faculty = null, course_year = null }, callback) {
+    createNew: async function ({ id_student = null, gender = 1, fullName = null, address = "", phoneNumber = null, email = "", id_class = null, id_faculty = null, course_year = null }, callback) {
         try {
-            const checkNull = isNull([id_student, username, password, gender, fullName, address, phoneNumber, email, id_class, id_faculty, course_year]);
+            const checkNull = isNull([id_student, gender, fullName, address, phoneNumber, email, id_class, id_faculty, course_year]);
             if (checkNull.checked) {
-                // console.log(12321331);
-                const student = await Student.create({ id_student, username, password, gender, fullName, address, phoneNumber, email, id_class, id_faculty, course_year });
+                const student = await Student.create({ id_student, gender, fullName, address, phoneNumber, email, id_class, id_faculty, course_year });
                 callback(null, student);
             } else {
-                console.log(checkNull.msg);
                 return callback(new Error(checkNull.msg), null);
             }
         } catch (error) {
@@ -34,9 +32,7 @@ module.exports = {
     },
     findAll: async function (callback = null) {
         try {
-            const data = await Student.findAll({
-                attributes: { exclude: ["username", "password"] },
-            });
+            const data = await Student.findAll(); //{attributes: { exclude: ["username", "password"] },}
             if (!callback) return data;
             if (data) {
                 return callback(null, data);

@@ -11,6 +11,7 @@ const changePassSchema = require("../services/validateSchema/changePassSchema");
 const updateAccountSchema = require("../services/validateSchema/updateAccountSchema");
 const { EXCHANGE_TYPE, EXCHANGE_NAME, QUEUE: queueName } = require("../configs/variables");
 let queueUtils = require("../services/rabbitMq/queueUtils");
+const axios = require("axios");
 
 module.exports = {
     studentGetOne: function (req, res, next) {
@@ -44,101 +45,65 @@ module.exports = {
         /*
             #swagger.tags = ['Student']
         */
-        const { error } = accountSchema.validate(req.body);
-        if (error) {
-            return jsonResponse({ req, res })
-                .status(error.status || 500)
-                .json({ message: error.details[0].message || "Internal Server Error" });
-        }
-
-        if (req.body.id_class) {
-            const result = await findByIdClass(req.body.id_class);
-            if (!result) {
-                return jsonResponse({ req, res }).json({ message: `Class ${req.body.id_class} does not exits!` });
+        try {
+            const { error } = accountSchema.validate(req.body);
+            if (error) {
+                return jsonResponse({ req, res })
+                    .status(error.status || 500)
+                    .json({ message: error.details[0].message || "Internal Server Error" });
             }
-        }
-        if (req.body.id_faculty) {
-            const result = await findByIdFaculty(req.body.id_faculty);
-            if (!result) {
-                return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} does not exits!` });
+
+            if (req.body.id_class) {
+                const result = await findByIdClass(req.body.id_class);
+                if (!result) {
+                    return jsonResponse({ req, res }).json({ message: `Class ${req.body.id_class} does not exits!` });
+                }
             }
-        }
+            if (req.body.id_faculty) {
+                const result = await findByIdFaculty(req.body.id_faculty);
+                if (!result) {
+                    return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} does not exits!` });
+                }
+            }
 
-        const purePassword = generateRandomString(6);
-        const hashPassword = bcrypt.hashSync(purePassword, bcrypt.genSaltSync(10));
-        const id_student = `${req.body.course_year}${generateRandomString(6)}`;
+            const id_student = `${req.body.course_year}${generateRandomString(6)}`;
 
-        const bodyData = {
-            id_student,
-            username: id_student,
-            password: hashPassword,
-            fullName: req.body.fullName,
-            email: req.body.email,
-            gender: req.body.gender,
-            id_class: req.body.id_class,
-            id_faculty: req.body.id_faculty,
-            course_year: req.body.course_year,
-        };
+            const bodyData = {
+                id_student,
+                fullName: req.body.fullName,
+                email: req.body.email,
+                gender: req.body.gender,
+                id_class: req.body.id_class,
+                id_faculty: req.body.id_faculty,
+                course_year: req.body.course_year,
+            };
 
-        createNew(bodyData, (error, payload) => {
-            const { dataValues, ...rest } = payload ? payload : {};
-            dataValues.password = purePassword;
-            if (error) return next(error);
-            queueUtils
-                .publishMessageToExchange(
-                    EXCHANGE_NAME.FAN_OUT_CREATE_CLIENT_DATA,
-                    EXCHANGE_TYPE.FANOUT,
-                    "",
-                    { durable: false },
-                    { noAck: true },
-                    {
-                        data: bodyData,
-                    }
-                )
-                .then((data) => {
-                    console.log(data);
-                })
-                .catch((error) => {
-                    next(error);
-                });
-
-            return jsonResponse({ req, res }).json({ status: true, message: `Student ${id_student} has been created successfully!`, data: dataValues });
-        });
-    },
-    studentUpdatePassword: async (req, res, next) => {
-        /*
-            #swagger.tags = ['Student']
-        */
-        const { error } = changePassSchema.validate(req.body);
-        if (error) {
-            return jsonResponse({ req, res })
-                .status(error.status || 500)
-                .json({ message: error.details[0].message || "Internal Server Error" });
-        }
-        const id_student = req.body.id_student;
-        const old_password = req.body.old_password;
-        const new_password = req.body.new_password;
-
-        const student = await findById(id_student, (err, result) => {
-            if (err) return next(err);
-            return result.dataValues;
-        });
-        const isCorrect = await bcrypt.compare(old_password, student.password);
-        if (!isCorrect) {
-            return jsonResponse({ req, res }).json({
-                message: `Password is incorrect!`,
+            createNew(bodyData, (error, payload) => {
+                const { dataValues, ...rest } = payload ? payload : {};
+                if (error) return next(error);
+                axios
+                    .post(`${process.env.SECURITY_SERVICE}/account/new-account`, {
+                        username: id_student,
+                        password: id_student,
+                        role: "STUDENT",
+                    })
+                    .then((data) => {
+                        if (data.data.status) {
+                            dataValues.username = data.data.data.username;
+                            dataValues.password = data.data.data.password;
+                            return jsonResponse({ req, res }).json({ status: true, message: `Student ${id_student} has been created successfully!`, data: dataValues });
+                        } else {
+                            return jsonResponse({ req, res }).json({ message: data.data.msg });
+                        }
+                    })
+                    .catch((err) => next(err));
             });
+        } catch (err) {
+            return next(err);
         }
-        const hashNewPassword = bcrypt.hashSync(new_password, bcrypt.genSaltSync(10));
-        updateOne(id_student, { password: hashNewPassword }, (err, result) => {
-            console.log("🚀 ~ file: AccountController.js:104 ~ updateOne ~ result:", result);
-            if (err) return next(err);
-            return jsonResponse({ req, res }).json({
-                status: true,
-                message: `Change password successfully`,
-            });
-        });
+        // res.end();
     },
+
     updateStudentData: async (req, res, next) => {
         /*
             #swagger.tags = ['Student']
@@ -175,5 +140,59 @@ module.exports = {
                 message: `Update student successfully`,
             });
         });
+    },
+    studentImport: async (req, res, next) => {
+        /*
+            #swagger.tags = ['Student']
+            #swagger.consumes = ['multipart/form-data']  
+            #swagger.parameters['file'] = {
+                in: 'formData',
+                type: 'file',
+                required: 'true',
+                description: 'Upload excel file data. Only excel format is allowed.',
+        } */
+        // #swagger.description = 'Admin can user this endpoint for importing list of accounts to database instead of register for each one.'
+        const rows = await xlsxFile(req.file.path);
+
+        if (
+            rows[0][0].toUpperCase() !== "STUDENT ID" ||
+            rows[0][1].toUpperCase() !== "GENDER" ||
+            rows[0][2].toUpperCase() !== "FULL NAME" ||
+            rows[0][3].toUpperCase() !== "ADDRESS" ||
+            rows[0][4].toUpperCase() !== "PHONE NUMBER" ||
+            rows[0][5].toUpperCase() !== "EMAIL" ||
+            rows[0][4].toUpperCase() !== "COURSE YEAR"
+        )
+            return jsonResponse({ req, res }).json({ message: "Invalid format excel file" });
+
+        try {
+            rows.forEach(async (element, index) => {
+                if (index > 0) {
+                    await createNew({
+                        id_student: element[0].toString(),
+                        gender: element[1].toString().toUpperCase() == "MALE" ? 1 : 0,
+                        fullName: element[2].toString(),
+                        address: element[3].toString(),
+                        phoneNumber: element[4].toString(),
+                        email: element[5].toString(),
+                    });
+                }
+            });
+            return res.status(200).json({
+                status: true,
+                statusCode: 200,
+                msg: {
+                    en: "All accounts has been import successfully!",
+                    vn: "Đã nhập danh sách tài khoản thành công!",
+                },
+            });
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                statusCode: 500,
+                msg: { en: "Interal Server Error" },
+                error: error.message,
+            });
+        }
     },
 };

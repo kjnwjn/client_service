@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const jsonResponse = require("./utils/jsonResponse");
 const { connect: databaseInitializer } = require("./configs/db");
 const corsOptions = { origin: "*", optionsSuccessStatus: 200 };
-const defineReceiver = require("./services/rabbitMq/receive");
+// const defineReceiver = require("./services/rabbitMq/receive");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -45,7 +45,7 @@ swaggerAutogen(outputFile, endpointsFiles, doc);
 
 databaseInitializer();
 RouteInitializer(app);
-defineReceiver.init();
+// defineReceiver.init();
 
 app.use(function (req, res, next) {
     return next(createError(404));

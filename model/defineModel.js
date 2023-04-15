@@ -19,14 +19,12 @@ const Class = sequelize.define(
         id_class: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
         id_faculty: { type: DataTypes.STRING, allowNull: false },
     },
-    { underscored: true }
+    { tableName: "class", underscored: true }
 );
 const Student = sequelize.define(
     "students",
     {
         id_student: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
-        username: { type: DataTypes.STRING, allowNull: false },
-        password: { type: DataTypes.STRING, allowNull: false },
         gender: { type: DataTypes.BOOLEAN, allowNull: true },
         fullName: { type: DataTypes.STRING, allowNull: false },
         address: { type: DataTypes.STRING, allowNull: true },
@@ -36,7 +34,7 @@ const Student = sequelize.define(
         id_faculty: { type: DataTypes.STRING, allowNull: false },
         course_year: { type: DataTypes.NUMBER, allowNull: false },
     },
-    { underscored: true }
+    { tableName: "student", underscored: true }
 );
 
 const User = sequelize.define(

@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/api/account-service/v1/account/get/{id_student}": {
+    "/api/account-service/v1/student/get/{id_student}": {
       "get": {
         "tags": [
           "Student"
@@ -28,7 +28,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/account/get-all": {
+    "/api/account-service/v1/student/get-all": {
       "get": {
         "tags": [
           "Student"
@@ -38,7 +38,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/account/new": {
+    "/api/account-service/v1/student/new": {
       "post": {
         "tags": [
           "Student"
@@ -76,36 +76,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/account/change-password": {
-      "post": {
-        "tags": [
-          "Student"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id_student": {
-                  "example": "any"
-                },
-                "old_password": {
-                  "example": "any"
-                },
-                "new_password": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {}
-      }
-    },
-    "/api/account-service/v1/account/{id_student}": {
+    "/api/account-service/v1/student/{id_student}": {
       "patch": {
         "tags": [
           "Student"
@@ -171,6 +142,9 @@
               "type": "object",
               "properties": {
                 "id_faculty": {
+                  "example": "any"
+                },
+                "course_year": {
                   "example": "any"
                 }
               }
@@ -308,6 +282,80 @@
                 }
               }
             }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/faculty/get/{id_faculty}": {
+      "get": {
+        "tags": [
+          "Faculty"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_faculty",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/faculty/get-all": {
+      "get": {
+        "tags": [
+          "Faculty"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/faculty/new": {
+      "post": {
+        "tags": [
+          "Faculty"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "faculty_name": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/test/upload/{id_student}": {
+      "post": {
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "id_student",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "avatar",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Some description..."
           }
         ],
         "responses": {}

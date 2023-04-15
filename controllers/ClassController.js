@@ -46,14 +46,15 @@ module.exports = {
                 .status(error.status || 500)
                 .json({ message: error.details[0].message || "Internal Server Error" });
         }
+        const { course_year } = req.body;
 
         if (req.body.id_faculty) {
-            const result = await findByIdClass(req.body.id_faculty);
+            const result = await findByIdFaculty(req.body.id_faculty);
             if (!result) {
                 return next(result);
             }
         }
-        const id_class = `${req.body.course_year}${req.body.id_faculty}${generateRandomString(4)}`;
+        const id_class = `${course_year}${req.body.id_faculty}${generateRandomString(4)}`;
         const bodyData = {
             id_class: id_class,
             id_faculty: req.body.id_faculty,
