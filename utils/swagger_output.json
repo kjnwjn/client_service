@@ -60,9 +60,6 @@
                 "fullName": {
                   "example": "any"
                 },
-                "email": {
-                  "example": "any"
-                },
                 "gender": {
                   "example": "any"
                 },
@@ -328,6 +325,75 @@
               "type": "object",
               "properties": {
                 "faculty_name": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/score/get/{id_student}": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_student",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/score/update-score": {
+      "patch": {
+        "tags": [
+          "Score"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/account-service/v1/score/new": {
+      "post": {
+        "tags": [
+          "Score"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_student": {
+                  "example": "any"
+                },
+                "id_course": {
+                  "example": "any"
+                },
+                "semester": {
                   "example": "any"
                 }
               }

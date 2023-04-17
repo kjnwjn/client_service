@@ -51,7 +51,7 @@ module.exports = {
         if (req.body.id_faculty) {
             const result = await findByIdFaculty(req.body.id_faculty);
             if (!result) {
-                return next(result);
+                return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} is not exits!` });
             }
         }
         const id_class = `${course_year}${req.body.id_faculty}${generateRandomString(4)}`;
@@ -79,13 +79,13 @@ module.exports = {
         if (req.body.id_class) {
             const result = await findByIdClass(req.body.id_class);
             if (!result) {
-                return next(result);
+                return jsonResponse({ req, res }).json({ message: `Class ${req.body.id_class} is not exits!` });
             }
         }
         if (req.body.id_faculty) {
             const result = await findByIdFaculty(req.body.id_class);
             if (!result) {
-                return next(result);
+                return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} is not exits!` });
             }
         }
         let id_class = req.body.id_class;

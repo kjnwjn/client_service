@@ -1,5 +1,3 @@
-const { sequelize } = require("../configs/db");
-const { DataTypes } = require("sequelize");
 const { isNull } = require("../utils/helper");
 const { Student, Class } = require("./defineModel");
 

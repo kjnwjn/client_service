@@ -10,6 +10,6 @@ const updateAccountSchema = Joi.object({
     id_faculty: Joi.string().min(3).max(30),
     address: Joi.string().min(3).max(30),
     phoneNumber: Joi.number().min(10).max(10),
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "vn"] } }),
 });
 module.exports = updateAccountSchema;

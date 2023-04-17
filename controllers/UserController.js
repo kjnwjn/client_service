@@ -95,40 +95,6 @@ module.exports = {
             return jsonResponse({ req, res }).json({ status: true, message: `User ${id_user} has been created successfully!`, data: dataValues });
         });
     },
-    // userUpdatePassword: async (req, res, next) => {
-    //     /*
-    //         #swagger.tags = ['User']
-    //     */
-    //     const { error } = changePassSchema.validate(req.body);
-    //     if (error) {
-    //         return jsonResponse({ req, res })
-    //             .status(error.status || 500)
-    //             .json({ message: error.details[0].message || "Internal Server Error" });
-    //     }
-    //     const id_user = req.body.id_user;
-    //     const old_password = req.body.old_password;
-    //     const new_password = req.body.new_password;
-
-    //     const user = await findById(id_user, (err, result) => {
-    //         if (err) return next(err);
-    //         return result.dataValues;
-    //     });
-    //     const isCorrect = await bcrypt.compare(old_password, user.password);
-    //     if (!isCorrect) {
-    //         return jsonResponse({ req, res }).json({
-    //             message: `Password is incorrect!`,
-    //         });
-    //     }
-    //     const hashNewPassword = bcrypt.hashSync(new_password, bcrypt.genSaltSync(10));
-    //     updateOne(id_user, { password: hashNewPassword }, (err, result) => {
-    //         console.log("🚀 ~ file: AccountController.js:104 ~ updateOne ~ result:", result);
-    //         if (err) return next(err);
-    //         return jsonResponse({ req, res }).json({
-    //             status: true,
-    //             message: `Change password successfully`,
-    //         });
-    //     });
-    // },
     updateUserData: async (req, res, next) => {
         /*
             #swagger.tags = ['User']

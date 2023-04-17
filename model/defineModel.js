@@ -37,6 +37,21 @@ const Student = sequelize.define(
     { tableName: "student", underscored: true }
 );
 
+const Score = sequelize.define(
+    "scores",
+    {
+        id: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
+        id_student: { type: DataTypes.STRING, allowNull: false },
+        id_course: { type: DataTypes.STRING, allowNull: false },
+        semester: { type: DataTypes.STRING, allowNull: true },
+        attendance_score: { type: DataTypes.NUMBER, allowNull: true },
+        assignment: { type: DataTypes.NUMBER, allowNull: true },
+        mid_tern: { type: DataTypes.NUMBER, allowNull: true },
+        final_tern: { type: DataTypes.NUMBER, allowNull: true },
+    },
+    { tableName: "score", underscored: true }
+);
+
 const User = sequelize.define(
     "user",
     {
@@ -52,6 +67,15 @@ const User = sequelize.define(
 );
 
 // Define Associations
+Student.hasMany(Score, {
+    foreignKey: "id_student",
+    targetKey: "id_student",
+});
+Score.belongsTo(Student, {
+    foreignKey: "id_student",
+    targetKey: "id_student",
+});
+
 Class.hasMany(Student, {
     foreignKey: "id_class",
     targetKey: "id_class",
@@ -75,4 +99,5 @@ module.exports = {
     Class,
     Student,
     User,
+    Score,
 };

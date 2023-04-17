@@ -1,16 +1,12 @@
 // const responseJson = require("../utils/jsonResponse");
 const { findById, createNew, findAll, updateOne, updateMany } = require("../model/student.query");
-const { findById: findByIdClass } = require("../model/class.query");
+const { findById: findByIdClass, findOneByIdFaculty } = require("../model/class.query");
 const { findById: findByIdFaculty } = require("../model/faculty.query");
 const jsonResponse = require("../utils/jsonResponse");
-const bcrypt = require("bcrypt");
 const { generateRandomString } = require("../utils/helper");
 const { body } = require("express-validator");
 const accountSchema = require("../services/validateSchema/accountSchema");
-const changePassSchema = require("../services/validateSchema/changePassSchema");
 const updateAccountSchema = require("../services/validateSchema/updateAccountSchema");
-const { EXCHANGE_TYPE, EXCHANGE_NAME, QUEUE: queueName } = require("../configs/variables");
-let queueUtils = require("../services/rabbitMq/queueUtils");
 const axios = require("axios");
 
 module.exports = {
@@ -65,17 +61,24 @@ module.exports = {
                     return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} does not exits!` });
                 }
             }
+            const { fullName, gender, id_class, id_faculty, course_year } = req.body;
 
+            const isClassExist = await findOneByIdFaculty({ id_class, id_faculty });
+
+            if (!isClassExist) {
+                return jsonResponse({ req, res }).json({ message: `Class ${id_class} does not exits in faculty ${id_faculty}!` });
+            }
             const id_student = `${req.body.course_year}${generateRandomString(6)}`;
+            const email = `${id_student}@student.abc.edu.vn`;
 
             const bodyData = {
                 id_student,
-                fullName: req.body.fullName,
-                email: req.body.email,
-                gender: req.body.gender,
-                id_class: req.body.id_class,
-                id_faculty: req.body.id_faculty,
-                course_year: req.body.course_year,
+                fullName: fullName,
+                email: email,
+                gender: gender,
+                id_class: id_class,
+                id_faculty: id_faculty,
+                course_year: course_year,
             };
 
             createNew(bodyData, (error, payload) => {
@@ -103,7 +106,6 @@ module.exports = {
         }
         // res.end();
     },
-
     updateStudentData: async (req, res, next) => {
         /*
             #swagger.tags = ['Student']
@@ -161,7 +163,9 @@ module.exports = {
             rows[0][3].toUpperCase() !== "ADDRESS" ||
             rows[0][4].toUpperCase() !== "PHONE NUMBER" ||
             rows[0][5].toUpperCase() !== "EMAIL" ||
-            rows[0][4].toUpperCase() !== "COURSE YEAR"
+            rows[0][6].toUpperCase() !== "ID CLASS" ||
+            rows[0][6].toUpperCase() !== "ID FACULTY" ||
+            rows[0][7].toUpperCase() !== "COURSE YEAR"
         )
             return jsonResponse({ req, res }).json({ message: "Invalid format excel file" });
 
@@ -175,6 +179,9 @@ module.exports = {
                         address: element[3].toString(),
                         phoneNumber: element[4].toString(),
                         email: element[5].toString(),
+                        id_class: element[6].toString(),
+                        id_faculty: element[7].toString(),
+                        course_year: element[8].toString(),
                     });
                 }
             });
@@ -190,7 +197,7 @@ module.exports = {
             return res.status(500).json({
                 status: false,
                 statusCode: 500,
-                msg: { en: "Interal Server Error" },
+                msg: { en: "Internal Server Error" },
                 error: error.message,
             });
         }

@@ -1,6 +1,4 @@
-const { sequelize } = require("../configs/db");
-const { DataTypes } = require("sequelize");
-const { Student, Class } = require("./defineModel");
+const { Class } = require("./defineModel");
 const { isNull } = require("../utils/helper");
 
 module.exports = {
@@ -38,7 +36,25 @@ module.exports = {
             if (data) {
                 callback(null, data);
             } else {
-                callback(new Error(`Student data does not exist or empty!`), null);
+                callback(new Error(`Class data does not exist or empty!`), null);
+            }
+        } catch (error) {
+            callback(error, null);
+        }
+    },
+    findOneByIdFaculty: async function ({ id_class, id_faculty }, callback = null) {
+        try {
+            const checkNull = isNull([id_class, id_faculty]);
+            if (checkNull.checked) {
+                const data = await Class.findOne({ where: { id_class, id_faculty } });
+                if (!callback) return data;
+                if (data) {
+                    callback(null, data);
+                } else {
+                    callback(new Error(`Class data does not exist or empty!`), null);
+                }
+            } else {
+                return callback(new Error(checkNull.msg), null);
             }
         } catch (error) {
             callback(error, null);
@@ -72,7 +88,7 @@ module.exports = {
                 toUpdate[key] = values[index];
             });
             if (checkNull.checked) {
-                const classInstance = await Student.update(toUpdate, {
+                const classInstance = await Class.update(toUpdate, {
                     where: {
                         id_class,
                     },

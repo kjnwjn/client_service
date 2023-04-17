@@ -10,7 +10,6 @@ cloudinary.config({
     api_key: "796484688251745",
     api_secret: "UHqigiiWANhqItnT1S3F-bdtOlE",
 });
-// const jsonResponse = require("./jsonResponse");
 
 const storageMulter = async (req, res, next) => {
     // const id_student = req.params.id_student;

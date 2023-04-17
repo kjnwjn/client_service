@@ -4,6 +4,7 @@ const { classCreateNew, classGetOne, classGetAll, updateClassData } = require(".
 const { studentCreateNew, studentGetOne, studentGetAll, updateStudentData } = require("../controllers/AccountController");
 const { userCreateNew, userGetOne, userGetAll, updateUserData } = require("../controllers/UserController");
 const { facultyGetOne, facultyGetAll, facultyCreateNew } = require("../controllers/FacultyController");
+const { scoreGetById, scoreCreateNew, updateScoreData } = require("../controllers/ScoreController");
 const multerUpload = require("../utils/multer");
 // STUDENT
 router.get("/student/get/:id_student", studentGetOne);
@@ -30,6 +31,12 @@ router.patch("/user/:id_user", updateUserData);
 router.get("/faculty/get/:id_faculty", facultyGetOne);
 router.get("/faculty/get-all", facultyGetAll);
 router.post("/faculty/new", facultyCreateNew);
+// --------------------------------------
+
+// SCORE
+router.get("/score/get/:id_student", scoreGetById);
+router.patch("/score/update-score", updateScoreData);
+router.post("/score/new", scoreCreateNew);
 // --------------------------------------
 
 // TEST
