@@ -1,15 +1,16 @@
 // const responseJson = require("../utils/jsonResponse");
 const { findById: StudentFindById } = require("../model/student.query");
-const { findById, findByIdStudent, createNew, updateMany } = require("../model/score.query");
+const { findById, findByIdStudent, createNew, updateMany, findIdStudentAndIdCourse } = require("../model/score.query");
 const jsonResponse = require("../utils/jsonResponse");
 // const bcrypt = require("bcrypt");
 // const { generateRandomString } = require("../utils/helper");
 const ScoreSchema = require("../services/validateSchema/scoreCreateSchema");
+const scoreExistSchema = require("../services/validateSchema/scoreExistSchema");
 const ScoreUpdateSchema = require("../services/validateSchema/scoreUpdateDataSchema");
 const { v4 } = require("uuid");
 
 module.exports = {
-    scoreGetById: function (req, res, next) {
+    scoreGetByIdStudent: function (req, res, next) {
         /*
             #swagger.tags = ['Score']
         */
@@ -23,20 +24,26 @@ module.exports = {
             });
         });
     },
-    // classGetAll: function (req, res, next) {
-    //     /*
-    //         #swagger.tags = ['Score']
-    //     */
-    //     findAllClass((err, result) => {
-    //         if (err) return next(err);
-    //         console.log(result);
-    //         return jsonResponse({ req, res }).json({
-    //             status: true,
-    //             message: `get list class successfully`,
-    //             data: result,
-    //         });
-    //     });
-    // },
+    scoreGetByIdStudentAndIdCourse: function (req, res, next) {
+        /*
+            #swagger.tags = ['Score']
+        */
+        const { error } = scoreExistSchema.validate(req.params);
+        if (error) {
+            return jsonResponse({ req, res })
+                .status(error.status || 500)
+                .json({ message: error.details[0].message || "Internal Server Error" });
+        }
+        const { id_student, id_course } = req.params;
+        findIdStudentAndIdCourse({ id_student, id_course }, (err, result) => {
+            if (err) return next(err);
+            return jsonResponse({ req, res }).json({
+                status: true,
+                message: `get score for student ${id_student} successfully`,
+                data: result,
+            });
+        });
+    },
     scoreCreateNew: async (req, res, next) => {
         /*
             #swagger.tags = ['Score']
@@ -55,8 +62,8 @@ module.exports = {
             }
         }
         const id = v4();
-
         const bodyData = {
+            id,
             id_student: req.body.id_student,
             id_course: req.body.id_course,
             semester: req.body.semester,
@@ -64,7 +71,7 @@ module.exports = {
 
         createNew(bodyData, (error, payload) => {
             if (error) return next(error);
-            return jsonResponse({ req, res }).json({ status: true, message: `Score for student ${id_class} has been created successfully!`, data: payload });
+            return jsonResponse({ req, res }).json({ status: true, message: `Score for student ${req.body.id_student} has been created successfully!`, data: payload });
         });
     },
     updateScoreData: async (req, res, next) => {

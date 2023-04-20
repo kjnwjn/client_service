@@ -1,5 +1,6 @@
 const { Score } = require("./defineModel");
 const { isNull } = require("../utils/helper");
+const { Op } = require("sequelize");
 
 module.exports = {
     findById: async function (id, callback = null) {
@@ -21,7 +22,7 @@ module.exports = {
                 where: {
                     id_student: id_student,
                 },
-                group: "semester",
+                // group: "semester",
             });
             if (!callback) return scoreElement;
             if (scoreElement) {
@@ -39,13 +40,43 @@ module.exports = {
                 where: {
                     id_course,
                 },
-                group: "semester",
+                // group: "semester",
             });
             if (!callback) return studentElement;
             if (studentElement) {
                 return callback(null, studentElement);
             } else {
                 return callback(new Error(`course ${id_course} doesn't exits any score`), null);
+            }
+        } catch (error) {
+            return callback(error, null);
+        }
+    },
+    findIdStudentAndIdCourse: async function ({ id_student, id_course }, callback = null) {
+        try {
+            const checkNull = isNull([id_student, id_course]);
+            if (checkNull.checked) {
+                const studentElement = await Score.findAll({
+                    where: {
+                        final_tern: {
+                            [Op.gt]: 5,
+                        },
+                        id_student,
+                        id_course,
+                    },
+                    order: [
+                        // Will escape title and validate DESC against a list of valid direction parameters
+                        ["created_at", "DESC"],
+                    ],
+                });
+                if (!callback) return studentElement;
+                if (studentElement) {
+                    return callback(null, studentElement);
+                } else {
+                    return callback(new Error(`Student ${id_student} doesn't exits any score for course${id_course}`), null);
+                }
+            } else {
+                return callback(new Error(checkNull.msg), null);
             }
         } catch (error) {
             return callback(error, null);
@@ -64,11 +95,11 @@ module.exports = {
             return callback(error, null);
         }
     },
-    createNew: async ({ id = null, id_student = null, id_course = null, attendance_score = null, assignment = null, mid_tern = null, final_tern = null }, callback = null) => {
+    createNew: async ({ id = null, id_student = null, id_course = null, semester = null }, callback = null) => {
         try {
             const checkNull = isNull([id, id_student, id_course]);
             if (checkNull.checked) {
-                const scoreInstance = await Score.create({ id, id_student, id_course, attendance_score, assignment, mid_tern, final_tern });
+                const scoreInstance = await Score.create({ id, id_student, id_course, semester });
                 if (!callback) return scoreInstance;
                 return callback(null, scoreInstance);
             } else {

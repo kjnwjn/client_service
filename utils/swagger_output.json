@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/api/account-service/v1/student/get/{id_student}": {
+    "/api/user-service/v1/student/get/{id_student}": {
       "get": {
         "tags": [
           "Student"
@@ -28,7 +28,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/student/get-all": {
+    "/api/user-service/v1/student/get-all": {
       "get": {
         "tags": [
           "Student"
@@ -38,7 +38,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/student/new": {
+    "/api/user-service/v1/student/new": {
       "post": {
         "tags": [
           "Student"
@@ -73,7 +73,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/student/{id_student}": {
+    "/api/user-service/v1/student/{id_student}": {
       "patch": {
         "tags": [
           "Student"
@@ -108,7 +108,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/class/get/{id_class}": {
+    "/api/user-service/v1/class/get/{id_class}": {
       "get": {
         "tags": [
           "Class"
@@ -125,7 +125,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/class/new": {
+    "/api/user-service/v1/class/new": {
       "post": {
         "tags": [
           "Class"
@@ -151,7 +151,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/class/get-all": {
+    "/api/user-service/v1/class/get-all": {
       "get": {
         "tags": [
           "Class"
@@ -161,7 +161,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/class/{id_class}": {
+    "/api/user-service/v1/class/{id_class}": {
       "patch": {
         "tags": [
           "Class"
@@ -193,7 +193,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/user/get/{id_user}": {
+    "/api/user-service/v1/user/get/{id_user}": {
       "get": {
         "tags": [
           "User"
@@ -210,7 +210,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/user/get-all": {
+    "/api/user-service/v1/user/get-all": {
       "get": {
         "tags": [
           "User"
@@ -220,7 +220,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/user/new": {
+    "/api/user-service/v1/user/new": {
       "post": {
         "tags": [
           "User"
@@ -252,7 +252,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/user/{id_user}": {
+    "/api/user-service/v1/user/{id_user}": {
       "patch": {
         "tags": [
           "User"
@@ -284,7 +284,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/faculty/get/{id_faculty}": {
+    "/api/user-service/v1/faculty/get/{id_faculty}": {
       "get": {
         "tags": [
           "Faculty"
@@ -301,7 +301,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/faculty/get-all": {
+    "/api/user-service/v1/faculty/get-all": {
       "get": {
         "tags": [
           "Faculty"
@@ -311,7 +311,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/faculty/new": {
+    "/api/user-service/v1/faculty/new": {
       "post": {
         "tags": [
           "Faculty"
@@ -334,7 +334,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/score/get/{id_student}": {
+    "/api/user-service/v1/score/get/{id_student}": {
       "get": {
         "tags": [
           "Score"
@@ -351,7 +351,30 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/score/update-score": {
+    "/api/user-service/v1/score/get/{id_student}/{id_course}": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id_student",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_course",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/user-service/v1/score/update-score": {
       "patch": {
         "tags": [
           "Score"
@@ -374,7 +397,7 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/score/new": {
+    "/api/user-service/v1/score/new": {
       "post": {
         "tags": [
           "Score"
@@ -403,7 +426,18 @@
         "responses": {}
       }
     },
-    "/api/account-service/v1/test/upload/{id_student}": {
+    "/api/user-service/v1/test": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user-service/v1/test/upload/{id_student}": {
       "post": {
         "description": "",
         "consumes": [

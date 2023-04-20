@@ -4,7 +4,7 @@ const { classCreateNew, classGetOne, classGetAll, updateClassData } = require(".
 const { studentCreateNew, studentGetOne, studentGetAll, updateStudentData } = require("../controllers/AccountController");
 const { userCreateNew, userGetOne, userGetAll, updateUserData } = require("../controllers/UserController");
 const { facultyGetOne, facultyGetAll, facultyCreateNew } = require("../controllers/FacultyController");
-const { scoreGetById, scoreCreateNew, updateScoreData } = require("../controllers/ScoreController");
+const { scoreGetByIdStudent, scoreCreateNew, updateScoreData, scoreGetByIdStudentAndIdCourse } = require("../controllers/ScoreController");
 const multerUpload = require("../utils/multer");
 // STUDENT
 router.get("/student/get/:id_student", studentGetOne);
@@ -34,10 +34,15 @@ router.post("/faculty/new", facultyCreateNew);
 // --------------------------------------
 
 // SCORE
-router.get("/score/get/:id_student", scoreGetById);
+router.get("/score/get/:id_student", scoreGetByIdStudent);
+router.get("/score/get/:id_student/:id_course", scoreGetByIdStudentAndIdCourse);
 router.patch("/score/update-score", updateScoreData);
 router.post("/score/new", scoreCreateNew);
 // --------------------------------------
+
+router.get("/test", (req, res, next) => {
+    res.json({ msg: "Hello" });
+});
 
 // TEST
 router.post("/test/upload/:id_student", multerUpload, (req, res, next) => {
