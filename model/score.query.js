@@ -1,4 +1,4 @@
-const { Score } = require("./defineModel");
+const { Score, Student } = require("./defineModel");
 const { isNull } = require("../utils/helper");
 const { Op } = require("sequelize");
 
@@ -18,6 +18,12 @@ module.exports = {
     },
     findByIdStudent: async function (id_student, callback = null) {
         try {
+            const student = await Student.findByPk(id_student);
+            if (!student) {
+                const error = new Error(`Student ${id_student} doesn't exits`);
+                error.status = 200;
+                return callback(error, null);
+            }
             const scoreElement = await Score.findAll({
                 where: {
                     id_student: id_student,
@@ -56,6 +62,12 @@ module.exports = {
         try {
             const checkNull = isNull([id_student, id_course]);
             if (checkNull.checked) {
+                const student = await Student.findByPk(id_student);
+                if (!student) {
+                    const error = new Error(`Student ${id_student} doesn't exits`);
+                    error.status = 200;
+                    return callback(error, null);
+                }
                 const studentElement = await Score.findAll({
                     where: {
                         gpa_course: {
@@ -84,6 +96,12 @@ module.exports = {
     },
     findOneStudent: async function (id_student, id_course, callback = null) {
         try {
+            const student = await Student.findByPk(id_student);
+            if (!student) {
+                const error = new Error(`Student ${id_student} doesn't exits`);
+                error.status = 200;
+                return callback(error, null);
+            }
             const studentElement = await Score.findOne({ where: { id_student, id_course } });
             if (!callback) return studentElement;
             if (studentElement) {
@@ -99,6 +117,13 @@ module.exports = {
         try {
             const checkNull = isNull([id, id_student, id_course]);
             if (checkNull.checked) {
+                const student = await Student.findByPk(id_student);
+
+                if (!student) {
+                    const error = new Error(`Student ${id_student} doesn't exits`);
+                    error.status = 200;
+                    return callback(error, null);
+                }
                 const scoreInstance = await Score.create({ id, id_student, id_course, semester });
                 if (!callback) return scoreInstance;
                 return callback(null, scoreInstance);

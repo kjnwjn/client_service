@@ -8,7 +8,9 @@ module.exports = {
             if (facultyElement) {
                 return callback(null, facultyElement);
             } else {
-                return callback(new Error(`faculty ${id} doesn't exits`), null);
+                const err = new Error(`faculty ${id} doesn't exits`);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             callback(error, null);
