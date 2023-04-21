@@ -58,7 +58,7 @@ module.exports = {
             if (checkNull.checked) {
                 const studentElement = await Score.findAll({
                     where: {
-                        final_tern: {
+                        gpa_course: {
                             [Op.gt]: 5,
                         },
                         id_student,

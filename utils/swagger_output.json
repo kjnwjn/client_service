@@ -389,6 +389,21 @@
               "properties": {
                 "id": {
                   "example": "any"
+                },
+                "gpa_course": {
+                  "example": "any"
+                },
+                "attendance_score": {
+                  "example": "any"
+                },
+                "assignment": {
+                  "example": "any"
+                },
+                "mid_tern": {
+                  "example": "any"
+                },
+                "final_tern": {
+                  "example": "any"
                 }
               }
             }

@@ -91,12 +91,14 @@ module.exports = {
                 return jsonResponse({ req, res }).json({ message: `Score ${req.body.id} does not exits!` });
             }
         }
+        const { attendance_score, assignment, mid_tern, final_tern } = req.body;
         let id = req.body.id;
         let dataPending = req.body;
         delete dataPending.id;
+        const gpa_course = attendance_score * 0.1 + assignment * 0.2 + mid_tern * 0.2 + final_tern * 0.5;
+        dataPending.gpa_course = gpa_course;
         const keyUpdate = Object.keys(dataPending);
         const valueUpdate = Object.values(dataPending);
-
         updateMany(id, keyUpdate, valueUpdate, (err, result) => {
             if (err) return next(err);
             return jsonResponse({ req, res }).json({

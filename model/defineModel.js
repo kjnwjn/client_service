@@ -44,10 +44,11 @@ const Score = sequelize.define(
         id_student: { type: DataTypes.STRING, allowNull: false },
         id_course: { type: DataTypes.STRING, allowNull: false },
         semester: { type: DataTypes.STRING, allowNull: true },
-        attendance_score: { type: DataTypes.NUMBER, allowNull: true },
-        assignment: { type: DataTypes.NUMBER, allowNull: true },
-        mid_tern: { type: DataTypes.NUMBER, allowNull: true },
-        final_tern: { type: DataTypes.NUMBER, allowNull: true },
+        attendance_score: { type: DataTypes.FLOAT, allowNull: true },
+        assignment: { type: DataTypes.FLOAT, allowNull: true },
+        mid_tern: { type: DataTypes.FLOAT, allowNull: true },
+        final_tern: { type: DataTypes.FLOAT, allowNull: true },
+        gpa_course: { type: DataTypes.FLOAT, allowNull: true },
     },
     { tableName: "score", underscored: true }
 );
