@@ -35,7 +35,7 @@ const swaggerAutogen = require("swagger-autogen");
 // };
 const doc = {
     info: { title: "Account for std-portal service", description: "Description" },
-    host: "localhost:" + process.env.PORT || 3000,
+    host: process.env.HOST + ":" + process.env.PORT || 3000,
     schemes: ["http"],
 };
 
@@ -45,7 +45,6 @@ swaggerAutogen(outputFile, endpointsFiles, doc);
 
 databaseInitializer();
 RouteInitializer(app);
-// defineReceiver.init();
 
 app.use(function (req, res, next) {
     return next(createError(404));

@@ -15,11 +15,11 @@ module.exports = {
             return callback(error, null);
         }
     },
-    createNew: async function ({ id_user = null, gender = 1, full_name = null, address = "", phone_number = null, role = "", id_faculty = null }, callback) {
+    createNew: async function ({ id_user = null, gender = 1, fullName = null, address = "", phone_number = null, role = "", id_faculty = null }, callback) {
         try {
-            const checkNull = isNull([id_user, gender, full_name, address, phone_number, role, id_faculty]);
+            const checkNull = isNull([id_user, gender, fullName, address, phone_number, role, id_faculty]);
             if (checkNull.checked) {
-                const user = await User.create({ id_user, gender, full_name, address, phone_number, role, id_faculty });
+                const user = await User.create({ id_user, gender, fullName, address, phone_number, role, id_faculty });
                 callback(null, user);
             } else {
                 console.log(checkNull.msg);

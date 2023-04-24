@@ -57,10 +57,10 @@ const User = sequelize.define(
     "user",
     {
         id_user: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
-        full_name: { type: DataTypes.STRING, allowNull: false },
+        fullName: { type: DataTypes.STRING, allowNull: false },
         address: { type: DataTypes.STRING, allowNull: true },
         gender: { type: DataTypes.BOOLEAN, allowNull: true },
-        phone_number: { type: DataTypes.STRING, allowNull: true },
+        phoneNumber: { type: DataTypes.STRING, allowNull: true },
         role: { type: DataTypes.STRING, allowNull: true },
         id_faculty: { type: DataTypes.STRING, allowNull: false },
     },
@@ -94,7 +94,14 @@ Class.belongsTo(Faculty, {
     foreignKey: "id_faculty",
     targetKey: "id_faculty",
 });
-
+Faculty.hasMany(User, {
+    foreignKey: "id_faculty",
+    targetKey: "id_faculty",
+});
+User.belongsTo(Faculty, {
+    foreignKey: "id_faculty",
+    targetKey: "id_faculty",
+});
 module.exports = {
     Faculty,
     Class,

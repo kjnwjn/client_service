@@ -85,18 +85,19 @@ module.exports = {
                 const { dataValues, ...rest } = payload ? payload : {};
                 if (error) return next(error);
                 axios
-                    .post(`${process.env.SECURITY_SERVICE}/account/new-account`, {
+                    .post(`${process.env.SECURITY_SERVICE}/new-account`, {
                         username: id_student,
                         password: id_student,
                         role: "STUDENT",
                     })
                     .then((data) => {
+                        console.log(data);
                         if (data.data.status) {
                             dataValues.username = data.data.data.username;
                             dataValues.password = data.data.data.password;
                             return jsonResponse({ req, res }).json({ status: true, message: `Student ${id_student} has been created successfully!`, data: dataValues });
                         } else {
-                            return jsonResponse({ req, res }).json({ message: data.data.msg });
+                            return jsonResponse({ req, res }).json({ message: data.data.message });
                         }
                     })
                     .catch((err) => next(err));

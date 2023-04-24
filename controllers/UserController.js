@@ -3,12 +3,9 @@ const { findById, createNew, findAll, updateOne, updateMany } = require("../mode
 const { findById: findByIdFaculty } = require("../model/faculty.query");
 const jsonResponse = require("../utils/jsonResponse");
 const { generateRandomString } = require("../utils/helper");
-const { body } = require("express-validator");
 const userSchema = require("../services/validateSchema/userSchema");
-// const changePassSchema = require("../services/validateSchema/changePassSchema");
 const updateUserSchema = require("../services/validateSchema/updateUserSchema");
-const { EXCHANGE_TYPE, EXCHANGE_NAME, QUEUE: queueName } = require("../configs/variables");
-let queueUtils = require("../services/rabbitMq/queueUtils");
+const axios = require("axios");
 
 module.exports = {
     userGetOne: function (req, res, next) {
@@ -69,30 +66,25 @@ module.exports = {
         };
 
         createNew(bodyData, (error, payload) => {
-            /*
-            #swagger.tags = ['User']
-        */
             const { dataValues, ...rest } = payload ? payload : {};
             if (error) return next(error);
-            // queueUtils
-            //     .publishMessageToExchange(
-            //         EXCHANGE_NAME.FAN_OUT_CREATE_CLIENT_DATA,
-            //         EXCHANGE_TYPE.FANOUT,
-            //         "",
-            //         { durable: false },
-            //         { noAck: true },
-            //         {
-            //             data: bodyData,
-            //         }
-            //     )
-            //     .then((data) => {
-            //         console.log(data);
-            //     })
-            //     .catch((error) => {
-            //         next(error);
-            //     });
-
-            return jsonResponse({ req, res }).json({ status: true, message: `User ${id_user} has been created successfully!`, data: dataValues });
+            if (error) return next(error);
+            axios
+                .post(`${process.env.SECURITY_SERVICE}/new-account`, {
+                    username: id_user,
+                    password: id_user,
+                    role: "FACULTY IT",
+                })
+                .then((data) => {
+                    if (data.data.status) {
+                        dataValues.username = data.data.data.username;
+                        dataValues.password = data.data.data.password;
+                        return jsonResponse({ req, res }).json({ status: true, message: `User ${id_user} has been created successfully!`, data: dataValues });
+                    } else {
+                        return jsonResponse({ req, res }).json({ message: data.data.msg });
+                    }
+                })
+                .catch((err) => next(err));
         });
     },
     updateUserData: async (req, res, next) => {

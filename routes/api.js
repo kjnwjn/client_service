@@ -45,7 +45,7 @@ router.get("/test", (req, res, next) => {
 });
 
 // TEST
-router.post("/test/upload/:id_student", multerUpload, (req, res, next) => {
+router.post("/test/upload/:id_user", multerUpload, (req, res, next) => {
     /*
           #swagger.consumes = ['multipart/form-data']  
           #swagger.parameters['avatar'] = {

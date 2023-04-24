@@ -1,10 +1,7 @@
 /* Middleware for multer storage upload */
 const multer = require("multer");
-const { v4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
 const jsonResponse = require("./jsonResponse");
-const { findById } = require("../model/student.query");
-
 cloudinary.config({
     cloud_name: "dofsuykut",
     api_key: "796484688251745",
@@ -12,17 +9,17 @@ cloudinary.config({
 });
 
 const storageMulter = async (req, res, next) => {
-    // const id_student = req.params.id_student;
-    if (!req.params.id_student) {
+    // const id_user = req.params.id_user;
+    if (!req.params.id_user) {
         return jsonResponse({ req, res }).json({
-            message: "id_student is required",
+            message: "id_user is required",
         });
     }
-    // const id_student = await findById(req.params.id_student);
-    const id_student = req.params.id_student;
-    if (!id_student) {
+    // const id_user = await findById(req.params.id_user);
+    const id_user = req.params.id_user;
+    if (!id_user) {
         return jsonResponse({ req, res }).json({
-            message: "id_student not found",
+            message: "id_user not found",
         });
     }
     const upload = multer({
@@ -31,8 +28,8 @@ const storageMulter = async (req, res, next) => {
                 callback(null, "./public/uploads");
             },
             filename: (req, file, callback) => {
-                // const fileName = `${id_student}`;
-                callback(null, `${id_student}.png`);
+                // const fileName = `${id_user}`;
+                callback(null, `${id_user}.png`);
             },
         }),
         limits: { fileSize: 5 * 1024 * 1024 },

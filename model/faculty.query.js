@@ -23,7 +23,9 @@ module.exports = {
             if (data) {
                 callback(null, data);
             } else {
-                callback(new Error(`faculty data does not exist or empty!`), null);
+                const err = new Error(`faculty data does not exist or empty!`);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             callback(error, null);
@@ -37,7 +39,9 @@ module.exports = {
                 if (!callback) return facultyInstance;
                 return callback(null, facultyInstance);
             } else {
-                return callback(new Error(checkNull.msg), null);
+                const err = new Error(checkNull.msg);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             callback(error, null);

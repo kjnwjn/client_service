@@ -9,7 +9,9 @@ module.exports = {
             if (student) {
                 return callback(null, student);
             } else {
-                return callback(new Error(`student ${id} doesn't exits`), null);
+                const err = new Error(`student ${id} doesn't exits`);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             return callback(error, null);
@@ -22,7 +24,9 @@ module.exports = {
                 const student = await Student.create({ id_student, gender, fullName, address, phoneNumber, email, id_class, id_faculty, course_year });
                 callback(null, student);
             } else {
-                return callback(new Error(checkNull.msg), null);
+                const err = new Error(checkNull.msg);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             callback(error, null);
@@ -35,7 +39,9 @@ module.exports = {
             if (data) {
                 return callback(null, data);
             } else {
-                return callback(new Error(`Student data does not exist or empty!`), null);
+                const err = new Error(`Student data does not exist or empty!`);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             return callback(error, null);
@@ -54,7 +60,9 @@ module.exports = {
                 });
                 return callback(null, student);
             } else {
-                return callback(new Error(checkNull.msg), null);
+                const err = new Error(checkNull.msg);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             return callback(error, null);
@@ -76,7 +84,9 @@ module.exports = {
                 });
                 return callback(null, student);
             } else {
-                return callback(new Error(checkNull.msg), null);
+                const err = new Error(checkNull.msg);
+                err.status = 404;
+                return callback(err, null);
             }
         } catch (error) {
             return callback(error, null);
