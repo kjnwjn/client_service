@@ -7,6 +7,6 @@ const accountSchema = Joi.object({
     id_class: Joi.string().min(3).max(30).required(),
     id_faculty: Joi.string().min(3).max(30).required(),
     address: Joi.string().min(3).max(30),
-    phoneNumber: Joi.number().min(10).max(10),
+    phoneNumber: Joi.number(),
 });
 module.exports = accountSchema;

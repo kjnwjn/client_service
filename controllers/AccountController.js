@@ -58,7 +58,9 @@ module.exports = {
             if (req.body.id_faculty) {
                 const result = await findByIdFaculty(req.body.id_faculty);
                 if (!result) {
-                    return jsonResponse({ req, res }).json({ message: `Faculty ${req.body.id_faculty} does not exits!` });
+                    return jsonResponse({ req, res }).json({
+                        message: `Faculty ${req.body.id_faculty} does not exits!`,
+                    });
                 }
             }
             const { fullName, gender, id_class, id_faculty, course_year } = req.body;
@@ -66,7 +68,9 @@ module.exports = {
             const isClassExist = await findOneByIdFaculty({ id_class, id_faculty });
 
             if (!isClassExist) {
-                return jsonResponse({ req, res }).json({ message: `Class ${id_class} does not exits in faculty ${id_faculty}!` });
+                return jsonResponse({ req, res }).json({
+                    message: `Class ${id_class} does not exits in faculty ${id_faculty}!`,
+                });
             }
             const id_student = `${req.body.course_year}${generateRandomString(6)}`;
             const email = `${id_student}@student.abc.edu.vn`;
@@ -85,7 +89,7 @@ module.exports = {
                 const { dataValues, ...rest } = payload ? payload : {};
                 if (error) return next(error);
                 axios
-                    .post(`${process.env.SECURITY_SERVICE}/new-account`, {
+                    .post(`${process.env.ACCOUNT_SERVICE}/new-account`, {
                         username: id_student,
                         password: id_student,
                         role: "STUDENT",
@@ -95,7 +99,11 @@ module.exports = {
                         if (data.data.status) {
                             dataValues.username = data.data.data.username;
                             dataValues.password = data.data.data.password;
-                            return jsonResponse({ req, res }).json({ status: true, message: `Student ${id_student} has been created successfully!`, data: dataValues });
+                            return jsonResponse({ req, res }).json({
+                                status: true,
+                                message: `Student ${id_student} has been created successfully!`,
+                                data: dataValues,
+                            });
                         } else {
                             return jsonResponse({ req, res }).json({ message: data.data.message });
                         }
